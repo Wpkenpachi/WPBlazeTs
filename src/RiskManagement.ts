@@ -1,5 +1,7 @@
 export default class RiskManagement {
-    constructor(public balance: number = 0, public config?: Config){
+    private balance: number = 0;
+    constructor(readonly initial_balance: number = 0, public config?: Config){
+        this.balance = initial_balance;
         this.config = config ? config : this.getDefaultConfig();
     }
 
@@ -12,6 +14,19 @@ export default class RiskManagement {
             drawdown_type: null,
             profit_type: null
         };
+    }
+
+    public getBalance(): number {
+        return this.balance;
+    }
+
+    public increaseBalance(value: number): void {
+        this.balance += value;
+    }
+
+    public decreaseBalance(value: number): void {
+        if (this.balance < value) throw new Error("No sufficient funds");
+        this.balance -= value;
     }
 }
 
