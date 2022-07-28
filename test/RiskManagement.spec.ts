@@ -25,55 +25,88 @@ test("Must create RiskManagement Instance with balance and config", function () 
     });
 });
 
-test("Must increase Balance", function () {
-    const riskManagement = new RiskManagement(1000);
-    riskManagement.increaseBalance(100);
-    expect(riskManagement.getBalance()).toBe(1100);
+test("Must pay", function() {
+    const config = new Config(2, false);
+    const riskManagement = new RiskManagement(10, config);
+    riskManagement.pay()
+    expect(riskManagement.getBalance()).toBe(8);
 });
 
-test("Must decrease Balance", function () {
-    const riskManagement = new RiskManagement(1000);
-    riskManagement.decreaseBalance(100);
-    expect(riskManagement.getBalance()).toBe(900);
+test("Must throw No funds", function() {
+    const config = new Config(20, false);
+    const riskManagement = new RiskManagement(10, config);
+    expect(() => riskManagement.pay()).toThrowError("No sufficient funds");
 });
 
-test("Must throw error decreasing Insufficient Balance", function () {
-    const riskManagement = new RiskManagement(1000);
-    expect(() => riskManagement.decreaseBalance(2000)).toThrowError("No sufficient funds");
+test("Must throw absolute Drawdown Reached", function() {
+    const config = new Config(5, false, 0, 5);
+    const riskManagement = new RiskManagement(10, config);
+    riskManagement.increaseDrawdown(5);
+    expect(() => riskManagement.pay()).toThrowError("Max Drawdown Reached");
 });
 
-test("Must calculate entry plus gale", function() {
+test("Must throw relative Drawdown Reached", function() {
+    const config = new Config(5, false, 0, 10, 0, 'relative');
+    const riskManagement = new RiskManagement(10, config);
+    riskManagement.increaseDrawdown(10);
+    expect(() => riskManagement.pay()).toThrowError("Max Drawdown Reached");
+});
+
+test("Must pay with Max Drawdown set", function() {
+    const config = new Config(5, false, 0, 10, 0, 'relative');
+    const riskManagement = new RiskManagement(100, config);
+    riskManagement.increaseDrawdown(5);
+    expect(() => riskManagement.pay()).not.toThrowError();
+});
+
+test("Must receive", function() {
+    const config = new Config(2);
     const riskManagement = new RiskManagement(1000, config);
-    const gale = riskManagement.calculateGale();
-    expect(gale).toBe(4);
+    riskManagement.receive();
+    expect(riskManagement.getBalance()).toBe(1004);
 });
 
-test("Must return 0 calculating entry plus gale after reached max number of gales", function() {
-    let cfg = new Config(2, true, 1);
-    const riskManagement = new RiskManagement(1000, cfg);
-    riskManagement.increaseGale();
-    riskManagement.increaseGale();
-    expect(riskManagement.calculateGale()).toBe(2);
+test("Must return gale", function() {
+    const config = new Config(2);
+    const riskManagement = new RiskManagement(1000, config);
+    expect(riskManagement.getGale()).toBe(0);
 });
 
-test("Must return gale 0 for use_gale false", function () {
-    let cfg = new Config(2, false);
-    const riskManagement = new RiskManagement(1000, cfg);
-    const gale = riskManagement.calculateGale();
-    expect(gale).toBe(2);
+test("Must return drawdown", function() {
+    const config = new Config(2);
+    const riskManagement = new RiskManagement(1000, config);
+    riskManagement.increaseDrawdown(5);
+    expect(riskManagement.getDrawdown()).toBe(5);
 });
 
-test("Must increase gale", function() {
-    let cfg = new Config(2, true, 1);
-    const riskManagement = new RiskManagement(1000, cfg);
-    riskManagement.increaseGale();
-    expect(riskManagement.getGale()).toBe(1);
+test("Must calculate entry amount without gale", function() {
+    const config = new Config(2, false, 2);
+    const riskManagement = new RiskManagement(1000, config);
+    riskManagement.calculateEntryAmount();
+    expect(riskManagement.getEntryAmount()).toBe(2);
 });
 
-test("Must not increase gale if reached max number of gales", function () {
-    let cfg = new Config(2, true, 1);
-    const riskManagement = new RiskManagement(1000, cfg);
-    riskManagement.increaseGale();
-    riskManagement.increaseGale();
-    expect(riskManagement.getGale()).toBe(1);
+test("Must calculate entry amount reaching max gales", function() {
+    const config = new Config(2, true, 2);
+    const riskManagement = new RiskManagement(1000, config);
+    riskManagement.pay();
+    riskManagement.pay();
+    riskManagement.pay();
+    riskManagement.calculateEntryAmount();
+    expect(riskManagement.getEntryAmount()).toBe(2);
+});
+
+test("Must calculate entry amount", function() {
+    const config = new Config(2, true, 2);
+    const riskManagement = new RiskManagement(1000, config);
+    riskManagement.calculateEntryAmount();
+    expect(riskManagement.getEntryAmount()).toBe(4);
+});
+
+test("Must increase gales", function() {
+    const config = new Config(2, true, 2);
+    const riskManagement = new RiskManagement(1000, config);
+    riskManagement.pay();
+    riskManagement.pay();
+    expect(riskManagement.getGale()).toBe(2);
 });
