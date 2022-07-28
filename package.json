@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "make-badges": "istanbul-badges-readme",
+    "make-badges-silent": "istanbul-badges-readme --silent",
+    "make-badges-custom-coverage-dir": "istanbul-badges-readme --coverageDir='./my-custom-coverage'",
+    "make-badges-custom-readme-dir": "istanbul-badges-readme --readmeDir='./my-custom-readme'"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +19,8 @@
     "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "istanbul-badges-readme": "^1.8.2"
   }
 }
