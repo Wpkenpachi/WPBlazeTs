@@ -1,0 +1,47 @@
+Arguments: 
+  /usr/bin/node /home/wesleysantos/.yarn/bin/yarn.js add typescript jest ts-jest ts-node @types/jest @types/ts-jest
+
+PATH: 
+  /home/wesleysantos/.yarn/bin:/home/wesleysantos/.config/yarn/global/node_modules/.bin:/home/wesleysantos/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  16.16.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@types%2fts-jest: Not found
+      at Request.params.callback [as _callback] (/home/wesleysantos/.yarn/lib/cli.js:66138:18)
+      at Request.self.callback (/home/wesleysantos/.yarn/lib/cli.js:140883:22)
+      at Request.emit (node:events:527:28)
+      at Request.<anonymous> (/home/wesleysantos/.yarn/lib/cli.js:141855:10)
+      at Request.emit (node:events:527:28)
+      at IncomingMessage.<anonymous> (/home/wesleysantos/.yarn/lib/cli.js:141777:12)
+      at Object.onceWrapper (node:events:641:28)
+      at IncomingMessage.emit (node:events:539:35)
+      at endReadableNT (node:internal/streams/readable:1345:12)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "wpblazets",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
